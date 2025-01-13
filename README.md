@@ -143,6 +143,7 @@ Hibernate moduna geçiş talebinde bulunur.
 Hibernate moduna geçiş tamamlanana kadar bekler.
 
 Nasıl Çalışır?
+
 Başlangıç: Mikrodenetleyici başlatıldığında sistem saati 16 MHz olarak yapılandırılır.
 Hibernate Modülünün Etkinleştirilmesi: Hibernate modülü başlatılır, RTC ve osilatör etkinleştirilir.
 RTC Alarmının Ayarlanması: RTC alarmı 10 saniye sonra cihazı uyandıracak şekilde ayarlanır.
@@ -150,12 +151,14 @@ Hibernate Moduna Geçiş: Cihaz Hibernate moduna geçer ve enerjiden tasarruf ed
 Uyandırma: 10 saniye sonra RTC alarmı devreye girer ve cihaz Hibernate modundan çıkarak işlemeye devam eder.
 Son Döngü: Cihaz tekrar işlemeye devam eder ve gerekirse başka işlemler gerçekleştirebilir.
 
-Donanım Gereksinimleri
+Donanım Gereksinimleri:
+
 Tiva C serisi mikrodenetleyici (örneğin TM4C123G)
 RTC alarmı için dahili osilatör kullanımı
 Hibernate modülü uyandırma ayarları
 
-Kullanım Notları
+Kullanım Notları:
+
 Güç Yönetimi: Hibernate modu, düşük güç tüketimi gerektiren uygulamalarda kullanılır.
 Uyandırma Kaynakları: Bu kod sadece RTC alarmını kullanarak cihazı uyandırır. Ancak, GPIO veya diğer kesme kaynakları ile uyandırma ayarları da yapılabilir.
 Zamanlama: RTC alarm zamanı Hibernate_SetRTCAlarm fonksiyonu ile ayarlanır. Bu süreyi değiştirebilirsiniz.
