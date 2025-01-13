@@ -1,0 +1,639 @@
+#include <stdint.h>
+#include <stdbool.h>
+#include "inc/hw_types.h"
+#include "inc/hw_memmap.h"
+#include "inc/hw_ints.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/gpio.h"
+#include "inc/hw_gpio.h"
+#include "driverlib/timer.h"
+#include "driverlib/interrupt.h"
+#include "driverlib/adc.h"
+
+volatile uint32_t timerACounter = 0;
+#define TIMER_A_OVERFLOW_LIMIT 20000//1 saat için için geçicek süre
+
+#define LCD_PORT    GPIO_PORTB_BASE
+#define RS          GPIO_PIN_0
+#define E           GPIO_PIN_1
+#define D4          GPIO_PIN_4
+#define D5          GPIO_PIN_5
+#define D6          GPIO_PIN_6
+#define D7          GPIO_PIN_7
+
+void ilk_ayar();
+void lcd_ayar();
+void otuzhgonder();
+void Kesme();
+void adc_ayar();
+
+void Saniye_1();
+void Saniye_2();
+void Dakika_1();
+void Dakika_2();
+void Saat_1();
+void Saat_2();
+
+void lcd_write(unsigned char d );
+void lcd_write_2(unsigned char d );
+void kursor_basa_don();
+void lcd_set_cursor(uint8_t row, uint8_t col);
+void kursor_sola_kaydır();
+void kursor_saga_kaydır();
+
+int saniye_1=0;
+int saniye_2=4;
+int dakika_1=9;
+int dakika_2=5;
+int saat_1=3;
+int saat_2=2;
+
+int a=0;
+int b=0;
+int c=0;
+int d=0;
+int e=0;
+
+int main ()
+{
+    ilk_ayar();
+    SysCtlDelay(2000);
+    lcd_ayar();
+    SysCtlDelay(2000);
+    lcd_write(saat_2);
+    SysCtlDelay(2000);
+    lcd_write(saat_1);
+    SysCtlDelay(2000);
+    lcd_write_2(9);
+    SysCtlDelay(2000);
+    lcd_write(dakika_2);
+    SysCtlDelay(2000);
+    lcd_write(dakika_1);
+    SysCtlDelay(2000);
+    lcd_write_2(9);
+    SysCtlDelay(2000);
+    lcd_write(saniye_2);
+    SysCtlDelay(2000);
+    lcd_write(saniye_1);
+    SysCtlDelay(2000);
+    kursor_sola_kaydır();
+    SysCtlDelay(2000);
+
+    while(1)
+    {
+
+    }
+}
+
+void Kesme()
+{
+    TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+    timerACounter++;
+    kursor_basa_don();
+    Saniye_1();
+}
+
+void Saniye_1()
+{
+    if(timerACounter==2000)
+    {
+        saniye_1++;
+        lcd_write(saniye_1);
+        SysCtlDelay(2000);
+        kursor_sola_kaydır();
+        timerACounter=0;
+        if(saniye_1==10)
+        {
+            saniye_1=0;
+            lcd_write(saniye_1);
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            a++;
+            SysCtlDelay(2000);
+            timerACounter=0;
+            saniye_2++;
+            Saniye_2();
+        }
+    }
+}
+void Saniye_2()
+{
+    if(a==1)
+    {
+        if(saniye_2==6)
+        {
+            saniye_2=0;
+            SysCtlDelay(2000);
+            lcd_write(saniye_2);
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            kursor_sola_kaydır();
+            b++;
+            SysCtlDelay(2000);
+            kursor_saga_kaydır();
+            SysCtlDelay(2000);
+            kursor_saga_kaydır();
+            a=0;
+            dakika_1++;
+            Dakika_1();
+        }
+        SysCtlDelay(2000);
+        lcd_write(saniye_2);
+        a=0;
+    }
+}
+void Dakika_1()
+{
+    if(b==1)
+    {
+        if(dakika_1==10)
+        {
+            dakika_1=0;
+            SysCtlDelay(2000);
+            lcd_write(dakika_1);
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            c++;
+            SysCtlDelay(2000);
+            kursor_saga_kaydır();
+            SysCtlDelay(2000);
+            dakika_2++;
+            b=0;
+            Dakika_2();
+        }
+        SysCtlDelay(2000);
+        lcd_write(dakika_1);
+        SysCtlDelay(2000);
+        b=0;
+        kursor_saga_kaydır();
+    }
+}
+void Dakika_2()
+{
+    if(c==1)
+    {
+        if(dakika_2==6)
+        {
+            dakika_2=0;
+            SysCtlDelay(2000);
+            lcd_write(dakika_2);
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            d++;
+            saat_1++;
+            Saat_1();
+            SysCtlDelay(2000);
+            kursor_saga_kaydır();
+            SysCtlDelay(2000);
+            c=0;
+        }
+        SysCtlDelay(2000);
+        lcd_write(dakika_2);
+        c=0;
+    }
+}
+void Saat_1()
+{
+    if(d==1)
+    {
+        if(saat_2==2)
+        {
+            if(saat_1==4)
+            {
+                saat_1=0;
+                kursor_sola_kaydır();
+                lcd_write(saat_1);
+                saat_2==0;
+            }
+        }
+        if(saat_1==10)
+        {
+            saat_1=0;
+            SysCtlDelay(2000);
+            lcd_write(saat_1);
+            SysCtlDelay(2000);
+            d=0;
+            SysCtlDelay(2000);
+            e++;
+            SysCtlDelay(2000);
+            saat_2++;
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            kursor_sola_kaydır();
+            SysCtlDelay(2000);
+            Saat_2();
+        }
+        SysCtlDelay(2000);
+        lcd_write(saat_1);
+        SysCtlDelay(2000);
+        d=0;
+    }
+}
+void Saat_2()
+{
+    if(e==1)
+    {
+        if(saat_2==3)
+        {
+            saat_2=0;
+            SysCtlDelay(2000);
+            lcd_write(saat_2);
+            e=0;
+        }
+        lcd_write(saat_2);
+        SysCtlDelay(2000);
+        e=0;
+    }
+}
+
+void lcd_write(unsigned char d )
+{
+    d=d+(0x30);
+    GPIOPinWrite(LCD_PORT, RS, 0x01);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x02);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, D4 | D5 | D6 | D7, (d & 0xf0) );
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x00);
+
+    SysCtlDelay(50000);
+
+    GPIOPinWrite(LCD_PORT, D4 | D5 | D6 | D7, (d & 0x0f) << 4 );
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, RS, 0x01);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x02);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x00);
+
+    SysCtlDelay(50000);
+}
+
+void lcd_write_2(unsigned char d )
+{
+    d=d+(0x31);
+    GPIOPinWrite(LCD_PORT, RS, 0x01);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x02);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, D4 | D5 | D6 | D7, (d & 0xf0) );
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x00);
+
+    SysCtlDelay(50000);
+
+    GPIOPinWrite(LCD_PORT, D4 | D5 | D6 | D7, (d & 0x0f) << 4 );
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, RS, 0x01);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x02);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT, E, 0x00);
+
+    SysCtlDelay(50000);
+}
+
+void ilk_ayar()
+{
+    // Sistem saati 40 MHz olarak ayarlanıyor.
+    SysCtlClockSet(SYSCTL_SYSDIV_5 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+    GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE,GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);
+    // Timer0 etkinleştiriliyor.
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+    TimerConfigure(TIMER0_BASE, TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PERIODIC | TIMER_CFG_B_PERIODIC); // Timer0 A ve B ayrı olarak periyodik modda ayarlanıyor.
+    // TimerA yük değeri ayarlanıyor (???). 1 sn de bir kesme olacak kırmızı ledi terslicek
+    TimerLoadSet(TIMER0_BASE, TIMER_A, (12000*12)); // 16 bit limit içinde ??? olarak ayarlandı
+    // Kesme ayarları - global ve yerel interruptlar etkinleştiriliyor.
+    IntMasterEnable(); // Global kesme izni
+    IntEnable(INT_TIMER0A); // Timer0A için kesme izni
+    // TimerA ve TimerB kesme ayarları.
+    TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT); // TimerA kesmesi etkinleştiriliyor.
+    // TimerA ve TimerB kesme fonksiyonları kaydediliyor.
+    TimerIntRegister(TIMER0_BASE, TIMER_A, Dakika_1);
+    // TimerA ve TimerB başlatılıyor.
+    TimerEnable(TIMER0_BASE, TIMER_A);
+}
+
+void lcd_ayar()
+{
+    otuzhgonder();
+    SysCtlDelay(2000);
+    otuzhgonder();
+    SysCtlDelay(2000);
+    otuzhgonder();
+    SysCtlDelay(2000);
+
+    //DL ayarı
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,32);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+    //********//
+    //Fonksiyon Secimi
+    GPIOPinWrite(LCD_PORT,RS,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,32);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,128);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+    //********//
+    //Ekran Ac Kapa
+    GPIOPinWrite(LCD_PORT,RS,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,64);
+    GPIOPinWrite(LCD_PORT,D7,128);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+    //********//
+    //Ekran Sil Basa Don
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,16);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+    //Giris Kipi Belirle
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,16);
+    GPIOPinWrite(LCD_PORT,D5,32);
+    GPIOPinWrite(LCD_PORT,D6,64);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+    //Kursor Kaydır
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,16);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,64);
+    GPIOPinWrite(LCD_PORT,D7,128);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+}
+void otuzhgonder()
+{
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,16);
+    GPIOPinWrite(LCD_PORT,D5,32);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    // GPIOPinWrite(LCD_PORT,255,0x30);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+}
+void kursor_basa_don()
+{
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,32);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+}
+void kursor_sola_kaydır()
+{
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,16);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+}
+void kursor_saga_kaydır()
+{
+    GPIOPinWrite(LCD_PORT,RS,0);
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,16);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,0);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,2);
+    SysCtlDelay(2000);
+
+    GPIOPinWrite(LCD_PORT,D4,0);
+    GPIOPinWrite(LCD_PORT,D5,0);
+    GPIOPinWrite(LCD_PORT,D6,64);
+    GPIOPinWrite(LCD_PORT,D7,0);
+
+    SysCtlDelay(2000);
+    GPIOPinWrite(LCD_PORT,E,0);
+    SysCtlDelay(2000);
+}
