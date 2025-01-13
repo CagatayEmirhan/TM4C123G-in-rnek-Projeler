@@ -1,5 +1,5 @@
 # TM4C123G-Icin-Ornek-Projeler
-#Proje 1(LCD_karakter_yazma)
+-Proje 1(LCD_karakter_yazma)-
 
 Bu proje, TM4C123G mikrodenetleyicisini kullanarak GPIO portları aracılığıyla bir LCD ekranı kontrol etmek için geliştirilmiştir. Proje kodu, TivaWare kitaplığına dayalıdır ve temel GPIO çıkış işlemleriyle LCD'ye veri yazmayı ve ekran ayarlarını yapmayı içerir.
 
@@ -21,7 +21,7 @@ Projede aşağıdaki TivaWare kütüphaneleri kullanılmıştır:
 sysctl.h ve sysctl.c: Sistem saatini yapılandırmak ve çevresel birimleri etkinleştirmek için.
 gpio.h ve gpio.c: GPIO portlarının yapılandırılması ve veri yazımı için.
 
-#Proje 2(LCD_Saat)
+-Proje 2(LCD_Saat)-
 
 Bu proje, Tiva C serisi mikrodenetleyici (TM4C123GH6PM) kullanılarak bir dijital saat uygulamasını gerçekleştirmeyi hedefler. Proje, dahili Timer modülü ve bir 16x2 LCD ekranı kullanarak saat, dakika ve saniye değerlerini görüntüler.
 
