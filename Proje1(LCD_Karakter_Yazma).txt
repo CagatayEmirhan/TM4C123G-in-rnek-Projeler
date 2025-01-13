@@ -1,0 +1,138 @@
+#include <stdint.h>
+#include <stdbool.h>
+#include "inc/hw_types.h"
+#include "inc/hw_gpio.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/sysctl.c"
+#include "driverlib/gpio.c"
+#include "driverlib/gpio.h"
+
+void init();
+
+
+void main(void)
+
+{
+
+   while(1)
+
+   {
+       init();
+
+       SysCtlDelay(200000);
+       //****Fonksiyon secme 4BIT *****//
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_4, 1);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 32);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 1);
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 128);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 1);
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+       //*******Ekran ayarları****
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_4, 1);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 1);
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 128);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 64);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 32);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 16);
+
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+
+       //****
+
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_4, 1);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 1);
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 16);
+
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+
+       //****Veri yazma*****
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_4, 16);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 64);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 1);
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 64);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 1);
+       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_4, 16);
+
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 32);
+       SysCtlDelay(200000);
+       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 1);
+       SysCtlDelay(200000);
+
+
+   }
+
+}
+void init()
+{
+    SysCtlClockSet(SYSCTL_SYSDIV_4|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);   //sistemin frekansını ayarlar
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);        //cevre birimlerini aktif eder.(portdve porte yi kullanabiliriz artık.)
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+    GPIOPinTypeGPIOOutput(GPIO_PORTC_BASE,GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);  //pini output yaptik
+    GPIOPinTypeGPIOOutput(GPIO_PORTE_BASE,GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);  //pini output yaptik
+
+}
