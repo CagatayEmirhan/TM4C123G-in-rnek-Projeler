@@ -15,6 +15,7 @@ Gecikmeler:
 SysCtlDelay fonksiyonu, belirli işlemler arasında gecikme oluşturmak için kullanılmıştır.
 
 Kullanılan Kütüphaneler
+
 Projede aşağıdaki TivaWare kütüphaneleri kullanılmıştır:
 sysctl.h ve sysctl.c: Sistem saatini yapılandırmak ve çevresel birimleri etkinleştirmek için.
 gpio.h ve gpio.c: GPIO portlarının yapılandırılması ve veri yazımı için.
