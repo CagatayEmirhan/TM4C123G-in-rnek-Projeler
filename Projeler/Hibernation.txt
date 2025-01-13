@@ -1,0 +1,70 @@
+#include <stdint.h>
+#include <stdbool.h>
+#include "inc/hw_memmap.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/hibernate.h"
+#include "driverlib/gpio.h"
+#include "driverlib/pin_map.h"
+
+void Hibernate_Init(void);
+void Hibernate_SetRTCAlarm(uint32_t seconds);
+void Hibernate_Enter(void);
+
+int main(void)
+{
+    // Saat sistemini 16 MHz olarak ayarla
+    SysCtlClockSet(SYSCTL_SYSDIV_5 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
+
+    // Hibernate modülünü başlat
+    Hibernate_Init();
+
+    // RTC alarmını 10 saniye sonra cihazı uyandıracak şekilde ayarla
+    Hibernate_SetRTCAlarm(10);
+
+    // Hibernate moduna geç
+    Hibernate_Enter();
+
+    // Uyandırmadan sonra buradan devam edecek
+    while (1)
+    {
+        // Burada yeniden işlem yapılabilir
+        SysCtlDelay(SysCtlClockGet() / 3); // Yaklaşık 1 saniye bekleme
+    }
+}
+
+void Hibernate_Init(void)
+{
+    // Hibernate modülü için saat kaynağını etkinleştir
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_HIBERNATE);
+    while (!SysCtlPeripheralReady(SYSCTL_PERIPH_HIBERNATE));
+
+    // Hibernate modülünü etkinleştir ve osilatörü yapılandır
+    HibernateEnableExpClk(SysCtlClockGet());
+    HibernateClockConfig(HIBERNATE_OSC_LOWDRIVE);
+
+    // RTC'yi etkinleştir
+    HibernateRTCEnable();
+
+    // Hibernate'den çıkış için RTC alarmını etkinleştir
+    HibernateWakeSet(HIBERNATE_WAKE_RTC);
+
+    // RTC'yi sıfırla (opsiyonel)
+    HibernateRTCSet(0);
+}
+
+void Hibernate_SetRTCAlarm(uint32_t seconds)
+{
+    // RTC alarmı ayarla
+    uint32_t currentTime = HibernateRTCGet();
+    HibernateRTCMatchSet(0, currentTime + seconds);
+}
+
+void Hibernate_Enter(void)
+{
+    // Hibernate moduna geçiş yap
+    HibernateRequest();
+    while (1)
+    {
+        // Hibernate moduna geçiş tamamlanana kadar bekle
+    }
+}
