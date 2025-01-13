@@ -41,7 +41,7 @@ driverlib/timer.h
 driverlib/interrupt.h
 driverlib/adc.h
 
--Proje 3(ADC ve Seri Port Kısmı)-
+-Proje 3,4(ADC ve Seri Port Kısmı)-
 
 Bu bölümde, projede kullanılan Seriport (UART) ve Analog-Dijital Çevirici (ADC) işlevleri detaylı bir şekilde açıklanmaktadır.
 
