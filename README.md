@@ -1,5 +1,6 @@
 # TM4C123G-Icin-Ornek-Projeler
 Proje 1(LCD_karakter_yazma)
+
 Bu proje, TM4C123G mikrodenetleyicisini kullanarak GPIO portları aracılığıyla bir LCD ekranı kontrol etmek için geliştirilmiştir. Proje kodu, TivaWare kitaplığına dayalıdır ve temel GPIO çıkış işlemleriyle LCD'ye veri yazmayı ve ekran ayarlarını yapmayı içerir.
 
 Proje Hakkında
