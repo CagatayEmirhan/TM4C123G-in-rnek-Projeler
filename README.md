@@ -20,3 +20,23 @@ Kullanılan Kütüphaneler
 Projede aşağıdaki TivaWare kütüphaneleri kullanılmıştır:
 sysctl.h ve sysctl.c: Sistem saatini yapılandırmak ve çevresel birimleri etkinleştirmek için.
 gpio.h ve gpio.c: GPIO portlarının yapılandırılması ve veri yazımı için.
+
+Proje 2(LCD_Saat)
+
+Bu proje, Tiva C serisi mikrodenetleyici (TM4C123GH6PM) kullanılarak bir dijital saat uygulamasını gerçekleştirmeyi hedefler. Proje, dahili Timer modülü ve bir 16x2 LCD ekranı kullanarak saat, dakika ve saniye değerlerini görüntüler.
+
+Özellikler
+Saat, Dakika ve Saniye Gösterimi: LCD ekranda dijital saat formatında zaman gösterimi (hh:mm:ss).
+
+Zaman Güncellemeleri: Timer modülü kullanılarak saniyede bir kesme oluşturulur ve zaman değerleri güncellenir.
+
+Programlanabilir Sistem Saati: Mikrodenetleyicinin sistem saati, PLL ve osilatör ayarları ile 40 MHz olarak yapılandırılmıştır.
+
+Kullanılan Kütüphaneler
+
+TivaWare: Tiva mikrodenetleyicileri için yazılım geliştirme kütüphanesi.
+driverlib/sysctl.h
+driverlib/gpio.h
+driverlib/timer.h
+driverlib/interrupt.h
+driverlib/adc.h
